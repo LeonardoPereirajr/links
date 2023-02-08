@@ -1,0 +1,42 @@
+<meta charset="UTF-8">
+<html>
+  <head>
+    <title>Adicionar Link</title>
+  </head>
+  <body>
+    <form id="form-add-link">
+      <label for="title">Título:</label>
+      <input type="text" id="title" name="title" required>
+      <br>
+      <label for="url">Link:</label>
+      <input type="text" id="url" name="url" required>
+      <br>
+      <button type="submit">Adicionar Link</button>
+    </form>
+    <script>
+      const form = document.getElementById("form-add-link");
+      form.addEventListener("submit", event => {
+        event.preventDefault();
+        const title = form.elements.title.value;
+        const url = form.elements.url.value;
+        const data = { title, url };
+        fetch("http://localhost:8080/api/articles/api/links", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            alert("Link adicionado com sucesso!");
+          })
+          .catch(error => {
+            console.error(error);
+            alert("Ocorreu um erro ao adicionar o link.");
+          });
+      });
+    </script>
+  </body>
+</html>
