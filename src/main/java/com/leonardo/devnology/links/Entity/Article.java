@@ -13,7 +13,7 @@ public class Article {
     private String title;
     private String url;
 
-    public Article(String title, String url) {
+    public Article(long id, String title, String url) {
         this.id = id;
         this.title = title;
         this.url = url;

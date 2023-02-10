@@ -53,7 +53,7 @@ public class ArticleController {
     @GetMapping("/api/links")
     public List<Article> getLinks() {
         return jdbcTemplate.query("SELECT * FROM links",
-                (rs, rowNum) -> new Article(rs.getString("title"), rs.getString("url")));
+                (rs, rowNum) -> new Article(rs.getLong("id"), rs.getString("title"), rs.getString("url")));
     }
 
     @PutMapping("/api/links/{id}")
