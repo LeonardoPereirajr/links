@@ -27,7 +27,9 @@
         <br>
       </div>
       <button type="submit" style="margin-top:10px ;">Adicionar Link</button>
-      <button id="save-button">Salvar</button>
+      <div>
+        <button type="submit" id="save-button">Salvar</button>
+      </div>
     </form>
   </div>
   <script>
@@ -40,8 +42,17 @@
       const title = form.elements.title.value;
       const url = form.elements.url.value;
       const data = { title, url };
-      fetch("http://localhost:8080/api/articles/api/links", {
-        method: "POST",
+
+      let method = "POST";
+      let url = "http://localhost:8080/api/articles/api/links";
+
+      if (selectedLinkId) {
+        method = "PUT";
+        url += `/${id}`;
+      }
+
+      fetch(url, {
+        method: method,
         headers: {
           "Content-Type": "application/json"
         },
@@ -75,6 +86,7 @@
   </table>
 </div>
 <script>
+  let selectedLinkId = null;
   // Realiza a chamada para o método GET de recuperação dos links adicionados
   fetch("http://localhost:8080/api/articles/api/links")
     .then(response => response.json())
@@ -96,12 +108,12 @@
         const editButton = document.createElement("button");
         editButton.textContent = "Editar";
         editButton.onclick = function () {
+          // Mostra o botão de salvar
+          saveButton.style.display = "inline";
           // Preenche o formulário com os dados do link selecionado
           document.querySelector("#title").value = link.title;
           document.querySelector("#url").value = link.url;
-          document.querySelector("#id").value = link.id;
-          // Mostra o botão de salvar
-          saveButton.style.display = "inline";
+          selectedLinkId = link.id;
         };
         actionCell.appendChild(editButton);
         row.appendChild(idCell);
@@ -117,19 +129,15 @@
     });
   // Esconde o botão de salvar ao carregar a página
   document.querySelector("#save-button").style.display = "none";
-
   const saveButton = document.querySelector("#save-button");
-  saveButton.addEventListener("click", () => {
-    const title = document.querySelector("#title-input").value;
-    const url = document.querySelector("#url-input").value;
-
+  saveButton.onclick(() => {
     // Realiza a chamada para o método PUT de atualização do link
-    fetch(`http://localhost:8080/api/articles/api/links/${link.id}`, {
+    fetch(`http://localhost:8080/api/articles/api/links/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ title, url })
+      body: JSON.stringify({ id, title, url })
     })
       .then(response => {
         if (!response.ok) {
@@ -140,6 +148,7 @@
       .then(data => {
         // Recarrega a página para atualizar a tabela com os dados atualizados
         location.reload();
+        console.log(id);
       })
       .catch(error => {
         console.error(error);
