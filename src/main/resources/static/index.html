@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adicionar Link</title>
+</head>
+
+<body style="background-image:linear-gradient(to right,rgb(38, 122, 119),rgb(11, 23, 134));">
+  <div class="container">
+    <h1 class="page-title" style="text-align: center; color: azure;">
+      Gerenciador de Links uteis
+    </h1>
+  </div>
+  <div style="text-align: center;display:flex;flex-direction:column; align-items: center;color: azure;">
+    <form id="form-add-link">
+      <div class="form-group" style="padding: 3px;">
+        <label for="title">Titulo:</label>
+        <input type="text" class="form-control" id="title" name="title" style="width: 300px; height: 25px;" required>
+        <br>
+      </div>
+      <div class="form-group">
+        <label for="url">Link :</label>
+        <input type="text" class="form-control" id="url" name="url" style="width: 400px; height: 25px;" required>
+        <br>
+      </div>
+      <div>
+        <button type="submit" class="btn btn-primary" style="margin-top:10px ;" onClick="submitForm()">Adicionar
+          Link</button>
+        <button type="salvar" id="salvar" style="margin-left:10px ;" onClick="submitFormSalvar()">Salvar</button>
+        <button type="delete" id="delete-button" style="margin-left:10px ;margin-right: 10px;"
+          onClick="deleteLink()">Deletar</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("form-add-link");
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      submitForm(id);
+    });
+    document.getElementById("salvar").addEventListener("click", event => {
+      event.preventDefault();
+      submitFormSalvar(id);
+    });
+    document.getElementById("delete-button").addEventListener("click", event => {
+      event.preventDefault();
+      console.log(id);
+      deleteLink(id);
+    });
+
+    function submitForm() {
+      const title = form.elements.title.value;
+      const url = form.elements.url.value;
+      const article = { title, url };
+      let required = "http://localhost:8080/api/articles/api/links";
+
+      fetch(required, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(article)
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          alert("Link adicionado com sucesso!");
+        })
+        .catch(error => {
+          console.error(error);
+          alert("Ocorreu um erro ao adicionar o link.");
+        });
+    }
+    // Esconde o botão de salvar ao carregar a página
+    document.querySelector("#salvar").style.display = "none";
+    const saveButton = document.querySelector("#salvar");
+
+    function submitFormSalvar() {
+      const title = form.elements.title.value;
+      const url = form.elements.url.value;
+      const id = selectedLinkId;
+      const article = { title, url };
+
+      fetch(`http://localhost:8080/api/articles/api/links/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(article)
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          alert("Link atualizado com sucesso!");
+        })
+        .catch(error => {
+          console.error(error);
+          alert("Ocorreu um erro ao atualizar o link.");
+        });
+    }
+
+    // Realiza a chamada para o método GET de recuperação dos links adicionados
+    fetch("http://localhost:8080/api/articles/api/links")
+      .then(response => response.json())
+      .then(data => {
+        // Itera sobre a lista de links adicionados
+        data.forEach(link => {
+          // Cria uma nova linha na tabela com o título e o link
+          const row = document.createElement("tr");
+          const titleCell = document.createElement("td");
+          titleCell.textContent = link.title;
+          const urlCell = document.createElement("td");
+          const urlLink = document.createElement("a");
+          urlLink.href = link.url;
+          urlLink.textContent = link.url;
+          urlCell.appendChild(urlLink);
+          const idCell = document.createElement("td");
+          idCell.textContent = link.id;
+          const actionCell = document.createElement("td");
+          const editButton = document.createElement("button");
+          editButton.textContent = "Editar";
+          editButton.onclick = function () {
+            // Mostra o botão de salvar
+            saveButton.style.display = "inline";
+            // Preenche o formulário com os dados do link selecionado
+            document.querySelector("#title").value = link.title;
+            document.querySelector("#url").value = link.url;
+            selectedLinkId = link.id;
+            console.log(link.id);
+            console.log(selectedLinkId);
+          };
+          actionCell.appendChild(editButton);
+          row.appendChild(idCell);
+          row.appendChild(titleCell);
+          row.appendChild(urlCell);
+          row.appendChild(actionCell);
+          document.querySelector("#link-table tbody").appendChild(row);
+        });
+      })
+      .catch(error => {
+        console.error(error);
+        alert("Ocorreu um erro ao recuperar a lista de links.");
+      });
+
+    function deleteLink() {
+      console.log(selectedLinkId);
+      const url = "http://localhost:8080/api/articles/api/links/" + selectedLinkId;
+
+      fetch(url, {
+        method: "DELETE",
+      })
+        .then(response => {
+          if (response.ok) {
+            alert("Link deletado com sucesso!");
+          } else {
+            throw new Error("Ocorreu um erro ao deletar o link.");
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          alert("Ocorreu um erro ao deletar o link.");
+        });
+    }
+  </script>
+</body>
+<div id="table" style="color: azure;align-items: center;margin-left:130px;margin-top: 40px;">
+  <table id="link-table"
+    style="align-items: left;color: azure;background-image:linear-gradient(to right,rgb(103, 107, 107),rgb(11, 1, 1));border: 1px solid rgb(13, 15, 15);">
+    <thead>
+      <tr>
+        <th style="text-align: center">Id</th>
+        <th style="text-align: center">Titulo</th>
+        <th style="text-align: center">Link</th>
+        <th style="text-align: center">Editar</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+</div>
+
+</html>

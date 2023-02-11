@@ -1,15 +1,12 @@
 package com.leonardo.devnology.links.Controller;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -57,9 +54,12 @@ public class ArticleController {
     }
 
     @PutMapping("/api/links/{id}")
-    public ResponseEntity<Object> updateLink(@PathVariable long id, @RequestBody Article article) {
-        jdbcTemplate.update("UPDATE links SET url = ?, title = ? WHERE id = ?", article.getUrl(), article.getTitle(),
-                id);
+    public ResponseEntity<Object> updateLink(@PathVariable Long id, @RequestBody Article article) {
+        int result = jdbcTemplate.update("UPDATE links SET url = ?, title = ? WHERE id = ?",
+                article.getUrl(), article.getTitle(),id);
+        if (result == 0) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         article.setId(id);
         return new ResponseEntity<>(article, HttpStatus.OK);
     }

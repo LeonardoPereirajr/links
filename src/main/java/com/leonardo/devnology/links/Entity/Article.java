@@ -13,11 +13,13 @@ public class Article {
     private String title;
     private String url;
 
-    public Article(long id, String title, String url) {
+    public Article(Long id, String title, String url) {
         this.id = id;
         this.title = title;
         this.url = url;
     }
+    
+    public Article() { }
 
     public void setUrl(String url) {
         this.url = url;
@@ -39,7 +41,8 @@ public class Article {
         return id;
     }
 
-    public void setId(Long id2) {
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }
