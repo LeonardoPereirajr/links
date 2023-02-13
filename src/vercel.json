@@ -1,0 +1,15 @@
+{
+    "version" : 2,
+    "builds" :[
+        {
+            "src" : "*.jar",
+            "use" : "openjdk:14"
+        }
+    ],
+    "routes" : [
+        {
+            "src" : "/(.*)",
+            "dest" : "links-0.0.1-SNAPSHOT"
+        }
+    ]
+}
