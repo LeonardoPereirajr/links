@@ -3,7 +3,7 @@
     "builds" :[
         {
             "src" : "public/*.jar",
-            "use" : "openjdk:14"
+            "use" : "java:11"
         }
     ],
     "routes" : [
