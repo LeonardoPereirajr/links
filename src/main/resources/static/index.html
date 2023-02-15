@@ -4,7 +4,12 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link
+  href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap"
+  rel="stylesheet"
+/>
   <title>Adicionar Link</title>
 </head>
 
@@ -67,8 +72,8 @@
       })
         .then(response => response.json())
         .then(data => {
-          console.log(data);
           alert("Link adicionado com sucesso!");
+          location.reload();
         })
         .catch(error => {
           console.error(error);
@@ -94,8 +99,8 @@
       })
         .then(response => response.json())
         .then(data => {
-          console.log(data);
           alert("Link atualizado com sucesso!");
+          location.reload();
         })
         .catch(error => {
           console.error(error);
@@ -156,6 +161,7 @@
         .then(response => {
           if (response.ok) {
             alert("Link deletado com sucesso!");
+            location.reload();
           } else {
             throw new Error("Ocorreu um erro ao deletar o link.");
           }
