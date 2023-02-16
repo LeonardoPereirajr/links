@@ -34,7 +34,19 @@ O formulário é preenchido com o Titulo e o Link. Clicar no Botão Adicionar Li
 
 ![image](https://user-images.githubusercontent.com/30580018/219226661-2008ee93-109d-4de8-9548-7c0ea6d26ec3.png)
 
+## Melhorias a serem implementadas
 
+- Juntar BackEnd com FrontEnd hospedado em nuvem para não ser necessário rodar localmente.
+- Utilizar método de scrapping identico ao usado no https://github.com/LeonardoPereirajr/app-scrapping
+- Melhorar o layout da pagina com CSS ou utilização de REACTJS tornando-a mais atrativa.
+
+##Tecnologias utilizadas:
+
+- Java 11
+- Spring
+- thymeleaf
+- Javascript
+- Supabase - Banco de dados PostgreSQL
 
 Autor
 | Leonardo Pereira | 
